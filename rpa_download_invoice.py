@@ -1,5 +1,5 @@
 # rpa_invoice_downloader.py
-
+import os
 import time
 import logging
 
@@ -20,7 +20,15 @@ class InvoiceDownloader:
     def __init__(self, driver_path: str = None):
         chrome_options = Options()
         chrome_options.add_argument("--start-maximized")
-        prefs = {"download.prompt_for_download": False}
+
+        download_dir = os.path.abspath("invoice") 
+        os.makedirs(download_dir, exist_ok=True)
+
+        prefs = {
+            "download.prompt_for_download": False,
+            "download.default_directory": download_dir,
+            "plugins.always_open_pdf_externally": True
+        }
         chrome_options.add_experimental_option("prefs", prefs)
 
         service = Service(driver_path) if driver_path else Service()
@@ -103,7 +111,7 @@ class InvoiceDownloader:
 
 
 def main():
-    lookup_code = "nhập mã tra cứu tại đây nhé thầy !!"  
+    lookup_code = "B1HEIRR8N0WP"  
     downloader = InvoiceDownloader(driver_path=r"D:\chromedriver-win64\chromedriver-win64\chromedriver-win64\chromedriver.exe")
     try:
         downloader.open_lookup_page()
