@@ -60,6 +60,18 @@ class InvoiceDownloader:
             logging.error("Không tìm thấy nút tìm kiếm.")
             raise
 
+    # Kiểm tra xem hóa đơn có tồn tại hay không
+    def check_invoice_exists(self):
+        try:
+            error_message = self.driver.find_element(By.XPATH, "//*[contains(text(),'Không tìm thấy hóa đơn')]")
+            if error_message.is_displayed():
+                logging.warning("Không tìm thấy hóa đơn với mã đã nhập.")
+                return False
+        except Exception:
+            logging.info("Hóa đơn đã được tìm thấy.")
+            return True
+        return True
+
     # Tải hóa đơn dưới dạng PDF
     def download_invoice_pdf(self):
         try:
@@ -91,12 +103,15 @@ class InvoiceDownloader:
 
 
 def main():
-    lookup_code = "mã muôn tra cứu" 
+    lookup_code = "nhập mã tra cứu tại đây nhé thầy !!"  
     downloader = InvoiceDownloader(driver_path=r"D:\chromedriver-win64\chromedriver-win64\chromedriver-win64\chromedriver.exe")
     try:
         downloader.open_lookup_page()
         downloader.enter_lookup_code(lookup_code)
         downloader.click_search()
+        if not downloader.check_invoice_exists():
+            logging.error("Không tìm thấy hóa đơn với mã đã nhập.")
+            return
         downloader.download_invoice_pdf()
     except Exception as e:
         logging.error(f"Lỗi xảy ra: {e}")
