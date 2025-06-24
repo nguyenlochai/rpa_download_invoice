@@ -111,7 +111,7 @@ class InvoiceDownloader:
 
 
 def main():
-    lookup_code = "B1HEIRR8N0WP"  
+    lookup_code = "Nhâp mã tra cứu hóa đơn"  
     downloader = InvoiceDownloader(driver_path=r"D:\chromedriver-win64\chromedriver-win64\chromedriver-win64\chromedriver.exe")
     try:
         downloader.open_lookup_page()
